@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Alert, Platform, Text, View } from "react-native";
 import { router } from "expo-router";
 import { useApp } from "../../src/context";
-import { Button, Field, Screen, styles } from "../../src/ui";
+import { Button, Field, Screen, colors, styles } from "../../src/ui";
 
 export default function Account() {
   const app = useApp();
@@ -10,6 +10,15 @@ export default function Account() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const validate = () => {
+    if (!email.trim()) return "Enter your email address.";
+    if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+      return "Enter a valid email address.";
+    if (!password) return "Enter your password.";
+    if (mode === "register" && password.length < 6) return "Use at least 6 characters for your password.";
+    if (password.length > 128) return "Use 128 characters or fewer for your password.";
+    return "";
+  };
   const submit = async (discardPending = false) => {
     setMessage("");
     try {
@@ -19,9 +28,15 @@ export default function Account() {
       router.replace("/(tabs)/you");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Please try again.");
+      app.setError("");
     }
   };
   const onSubmit = () => {
+    const validationMessage = validate();
+    if (validationMessage) {
+      setMessage(validationMessage);
+      return;
+    }
     if (mode === "login" && app.pending.length) {
       const text = "Some guest completions have not synced. Switching accounts now removes those local drafts.";
       if (Platform.OS === "web") {
@@ -35,7 +50,7 @@ export default function Account() {
     void submit();
   };
   return (
-    <Screen stack>
+    <Screen stack showGlobalError={false}>
       <Text style={styles.eyebrow}>YOUR OUTSIDE STORY</Text>
       <Text style={styles.title}>{mode === "register" ? "Keep it with you." : "Welcome back."}</Text>
       <Text style={styles.body}>
@@ -44,16 +59,16 @@ export default function Account() {
           : "Sign in to see your saved plans and history. A different guest profile on this device stays separate."}
       </Text>
       <View style={{ gap: 14 }}>
-        <Field label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" autoComplete="email" />
-        <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry autoCapitalize="none" autoComplete={mode === "register" ? "new-password" : "current-password"} />
+        <Field label="Email" value={email} onChangeText={(value) => { setEmail(value); setMessage(""); }} keyboardType="email-address" autoCapitalize="none" autoComplete="email" />
+        <Field label="Password" value={password} onChangeText={(value) => { setPassword(value); setMessage(""); }} secureTextEntry autoCapitalize="none" autoComplete={mode === "register" ? "new-password" : "current-password"} />
         {mode === "register" ? <Text style={styles.small}>Use at least 6 characters. There is no password reset yet, so keep it somewhere safe.</Text> : null}
-        {message ? <Text accessibilityRole="alert" style={styles.error}>{message}</Text> : null}
+        {message ? <View style={styles.error}><Text accessibilityRole="alert" style={[styles.small, { color: colors.orange }]}>{message}</Text></View> : null}
         <Button
           label={mode === "register" ? "Create account" : "Sign in"}
           disabled={app.busy}
           onPress={onSubmit}
         />
-        <Button label={mode === "register" ? "I already have an account" : "Create an account instead"} secondary onPress={() => { setMode(mode === "register" ? "login" : "register"); setMessage(""); }} />
+        <Button label={mode === "register" ? "I already have an account" : "Create an account instead"} secondary onPress={() => { setMode(mode === "register" ? "login" : "register"); setMessage(""); app.setError(""); }} />
       </View>
     </Screen>
   );

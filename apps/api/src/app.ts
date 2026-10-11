@@ -149,9 +149,11 @@ export async function buildApp(
                 : "REQUEST_FAILED",
         message:
           error instanceof z.ZodError
-            ? error.issues.slice(0, 3).map((issue) =>
-                `${issue.path.join(".") || "Input"}: ${issue.message}`,
-              ).join(" ")
+            ? error.issues.slice(0, 3).map((issue) => {
+                const field = issue.path.join(".");
+                const label = field ? field[0].toUpperCase() + field.slice(1) : "Input";
+                return `${label}: ${issue.message}`;
+              }).join("\n")
             : status >= 500
             ? "The request could not be completed. Please retry."
             : error instanceof Error

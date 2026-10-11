@@ -213,7 +213,7 @@ export function Landscape({ compact = false }: { compact?: boolean }) {
     </View>
   );
 }
-export function Screen({ children, stack = false }: { children: React.ReactNode; stack?: boolean }) {
+export function Screen({ children, stack = false, showGlobalError = true }: { children: React.ReactNode; stack?: boolean; showGlobalError?: boolean }) {
   const app = useApp();
   return (
     <SafeAreaView style={styles.screen} edges={stack ? ["left", "right"] : ["top", "left", "right"]}>
@@ -230,7 +230,7 @@ export function Screen({ children, stack = false }: { children: React.ReactNode;
           </View>
           <Text style={styles.small}>Go a little further</Text>
         </View> : null}
-        {app.error ? (
+        {showGlobalError && app.error ? (
           <View style={styles.error}>
             <Text
               accessibilityRole="alert"

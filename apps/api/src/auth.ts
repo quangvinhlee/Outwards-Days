@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const scrypt = promisify(scryptCallback);
 export const credentials = z.object({
-  email: z.email().max(254).transform((value) => value.trim().toLowerCase()),
+  email: z.email({ error: "Enter a valid email address." }).max(254).transform((value) => value.trim().toLowerCase()),
   password: z.string().min(6, "Use at least 6 characters.").max(128),
 }).strict();
 export const loginCredentials = credentials.extend({ password: z.string().min(1).max(128) });

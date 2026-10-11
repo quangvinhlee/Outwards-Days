@@ -93,7 +93,7 @@ describe("API ownership and atomic transitions", () => {
     const { app, call } = await setup();
     const short = await call("POST", "/v1/auth/register", { email: "six@example.com", password: "12345" });
     expect(short.statusCode).toBe(422);
-    expect(short.json().error.message).toBe("password: Use at least 6 characters.");
+    expect(short.json().error.message).toBe("Password: Use at least 6 characters.");
     const created = await call("POST", "/v1/auth/register", { email: "six@example.com", password: "123456" });
     expect(created.statusCode).toBe(200);
     const login = await app.inject({ method: "POST", url: "/v1/auth/login", payload: { email: "six@example.com", password: "123456" } });

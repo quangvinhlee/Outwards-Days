@@ -1,0 +1,20 @@
+# Create separately after the API has its actual public URL.
+services:
+  - type: web
+    name: outwards-days-web
+    runtime: static
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build:web
+    staticPublishPath: ./apps/mobile/dist
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: EXPO_PUBLIC_WEB_API_BASE_URL
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff

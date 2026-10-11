@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-const base = `http://127.0.0.1:${process.env.PORT || 3100}`;
+const base = (process.env.API_BASE_URL || `http://127.0.0.1:${process.env.PORT || 3100}`).replace(/\/$/, "");
 let token;
 async function call(path, method = "GET", body) {
   const r = await fetch(base + path, {

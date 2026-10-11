@@ -6,7 +6,8 @@
   }
   handle @chat {
     request_body {
-      max_size 128KB
+      # Photo mission requests include a resized image encoded as base64.
+      max_size 2MB
     }
     reverse_proxy 127.0.0.1:11434 {
       header_up -Authorization

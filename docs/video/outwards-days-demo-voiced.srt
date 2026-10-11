@@ -1,0 +1,47 @@
+1
+00:00:00,095 --> 00:00:02,550
+Outwards Days makes a little room for outside
+
+2
+00:00:03,455 --> 00:00:06,170
+Confirm your week then let Gemma suggest outdoor
+
+3
+00:00:06,205 --> 00:00:09,864
+ideas around your available time and preferences The
+
+4
+00:00:09,875 --> 00:00:12,386
+scheduler checks the full time budget and labels
+
+5
+00:00:12,420 --> 00:00:15,091
+basic suggestions when AI cannot produce a valid
+
+6
+00:00:15,136 --> 00:00:17,716
+plan Open an outing to see its place
+
+7
+00:00:17,898 --> 00:00:22,693
+preparation travel activity and return time Optional mini
+
+8
+00:00:22,705 --> 00:00:24,932
+missions give you something to notice or try
+
+9
+00:00:25,886 --> 00:00:28,545
+Explore nearby parks and mapped routes then choose
+
+10
+00:00:28,580 --> 00:00:31,614
+what fits This is an emulator walkthrough of
+
+11
+00:00:31,625 --> 00:00:34,989
+a saved plan Real-phone and outdoor testing are
+
+12
+00:00:35,034 --> 00:00:35,386
+next

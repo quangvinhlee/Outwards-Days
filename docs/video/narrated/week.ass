@@ -1,0 +1,19 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,DejaVu Sans,34,&H003C4D23,&H003C4D23,&H00E8F3F5,&H00E8F3F5,0,0,0,0,100,100,0,0,1,2,0,2,90,620,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.10,0:00:02.51,Default,,0,0,0,,Here is a saved week labelled personalized with
+Dialogue: 0,0:00:02.53,0:00:07.17,Default,,0,0,0,,Gemma It includes photography reading movement a picnic
+Dialogue: 0,0:00:07.45,0:00:11.49,Default,,0,0,0,,gardening hiking and walking Each card shows when
+Dialogue: 0,0:00:11.50,0:00:13.60,Default,,0,0,0,,to go where to go and the total
+Dialogue: 0,0:00:13.60,0:00:16.75,Default,,0,0,0,,time you need These are suggestions for you
+Dialogue: 0,0:00:16.76,0:00:19.51,Default,,0,0,0,,to review A named place is not a
+Dialogue: 0,0:00:19.51,0:00:21.92,Default,,0,0,0,,guarantee of access or route conditions

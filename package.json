@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit && pnpm --filter @outsideweek/mobile typecheck",
     "test": "vitest run",
     "build": "tsc -p tsconfig.build.json",
+    "build:web": "node scripts/build-web.mjs",
     "setup:local": "node scripts/setup-local.mjs",
     "db:start": "docker compose up -d --wait mongodb",
     "db:stop": "docker compose stop mongodb",

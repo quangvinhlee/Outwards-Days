@@ -1,0 +1,18 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,DejaVu Sans,34,&H003C4D23,&H003C4D23,&H00E8F3F5,&H00E8F3F5,0,0,0,0,100,100,0,0,1,2,0,2,90,620,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.10,0:00:03.29,Default,,0,0,0,,Explore nearby parks rivers and mapped loop hikes
+Dialogue: 0,0:00:04.33,0:00:07.08,Default,,0,0,0,,The app uses source-linked place data and when
+Dialogue: 0,0:00:07.11,0:00:11.63,Default,,0,0,0,,coordinates are available weather and daylight information Map
+Dialogue: 0,0:00:11.70,0:00:15.50,Default,,0,0,0,,coverage can be incomplete Straight-line distance is not
+Dialogue: 0,0:00:15.50,0:00:18.62,Default,,0,0,0,,travel time so check the real journey entrance
+Dialogue: 0,0:00:18.92,0:00:20.61,Default,,0,0,0,,and conditions before heading out

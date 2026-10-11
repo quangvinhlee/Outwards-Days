@@ -5,7 +5,7 @@ export default {
     scheme: "outsideweek",
     version: "0.1.0",
     orientation: "portrait",
-    web: { bundler: "metro" },
+    web: { bundler: "metro", output: "single" },
     userInterfaceStyle: "light",
     ios: { supportsTablet: true, bundleIdentifier: "app.outsideweek.mobile" },
     android: { package: "app.outsideweek.mobile" },

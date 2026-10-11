@@ -1,0 +1,65 @@
+[
+  {
+    "id": "intro",
+    "title": "Make a little room for outside",
+    "text": "Outwards Days makes a little room for outside. It turns the week you actually have into small outdoor moments, from a walk or a few pages in the park, to gardening, photography, or a longer outing. This walkthrough uses the Android emulator and a locally running backend.",
+    "startSeconds": 0,
+    "durationSeconds": 19.106
+  },
+  {
+    "id": "preferences",
+    "title": "Your interests, pace and limits",
+    "text": "Start with what brings you outside. Choose your interests, your pace, how many days you want to go out, and the length of your activities. Add your travel estimate and equipment access. Approximate location and reminders are optional. These preferences help the planner suggest something you can actually do.",
+    "startSeconds": 19.106,
+    "durationSeconds": 21.674
+  },
+  {
+    "id": "schedule",
+    "title": "Plan around real life",
+    "text": "Next, review your week. Include sleep, work, commuting, and other commitments. You can reuse last week, add weekday work hours, or mark a full day off. Lunch becomes available only when you explicitly add a break. Review all seven days, then confirm your week. The planner leaves room for your morning routine and getting home after work.",
+    "startSeconds": 40.78,
+    "durationSeconds": 25.922
+  },
+  {
+    "id": "generation",
+    "title": "How the AI creates your plan",
+    "text": "When you find ideas or refresh a plan, the backend first calculates eligible time slots. A Mastra workflow asks Gemma, running through Ollama, to choose and personalize activities using those slots and your preferences. The model does not receive your raw calendar commitments. Separate validation checks the response and the full time budget. Invalid output gets one repair attempt, then an explicitly labelled basic catalogue fallback.",
+    "startSeconds": 66.702,
+    "durationSeconds": 29.978
+  },
+  {
+    "id": "week",
+    "title": "Small moments, a varied week",
+    "text": "Here is a saved week labelled personalized with Gemma. It includes photography, reading, movement, a picnic, gardening, hiking, and walking. Each card shows when to go, where to go, and the total time you need. These are suggestions for you to review. A named place is not a guarantee of access or route conditions.",
+    "startSeconds": 96.68,
+    "durationSeconds": 23.618
+  },
+  {
+    "id": "budget",
+    "title": "See the whole outing",
+    "text": "Open an outing to see the details. The time budget includes getting ready, travelling out, the activity, coming home, and a return buffer. You choose whether to accept it. Accepted plans can be moved, replaced, or skipped, and changes to your availability may mean a plan needs review. Longer outings also need enough daylight and suitable conditions.",
+    "startSeconds": 120.298,
+    "durationSeconds": 25.37
+  },
+  {
+    "id": "missions",
+    "title": "Optional missions and reflections",
+    "text": "Mini missions give you something to notice, try, or reflect on. Some are simple actions, some invite a written note, and photo missions can use the camera with Gemma vision checking the selected subject. Camera checks unlock only after acceptance and the scheduled start. The full camera journey on a real phone still needs testing.",
+    "startSeconds": 145.668,
+    "durationSeconds": 22.394
+  },
+  {
+    "id": "places",
+    "title": "Discover nearby outdoors",
+    "text": "Explore nearby parks, rivers, and mapped loop hikes. The app uses source-linked place data and, when coordinates are available, weather and daylight information. Map coverage can be incomplete. Straight-line distance is not travel time, so check the real journey, entrance, and conditions before heading out.",
+    "startSeconds": 168.062,
+    "durationSeconds": 22.202
+  },
+  {
+    "id": "progress",
+    "title": "Every outing counts",
+    "text": "The You tab keeps your outdoor story and past weeks. After an outing, record completed or partly completed, with honest feedback. Plans are cached on the phone, and completion can queue locally until you reconnect. Generation still needs the backend and model service. Real-phone offline and outdoor testing remain next steps. A little room for outside, without a streak to lose.",
+    "startSeconds": 190.264,
+    "durationSeconds": 27.722
+  }
+]

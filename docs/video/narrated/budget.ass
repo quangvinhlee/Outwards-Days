@@ -1,0 +1,20 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,DejaVu Sans,34,&H003C4D23,&H003C4D23,&H00E8F3F5,&H00E8F3F5,0,0,0,0,100,100,0,0,1,2,0,2,90,620,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.10,0:00:03.02,Default,,0,0,0,,Open an outing to see the details The
+Dialogue: 0,0:00:03.03,0:00:06.14,Default,,0,0,0,,time budget includes getting ready travelling out the
+Dialogue: 0,0:00:06.20,0:00:10.06,Default,,0,0,0,,activity coming home and a return buffer You
+Dialogue: 0,0:00:10.07,0:00:13.34,Default,,0,0,0,,choose whether to accept it Accepted plans can
+Dialogue: 0,0:00:13.36,0:00:16.47,Default,,0,0,0,,be moved replaced or skipped and changes to
+Dialogue: 0,0:00:16.47,0:00:19.00,Default,,0,0,0,,your availability may mean a plan needs review
+Dialogue: 0,0:00:19.98,0:00:23.08,Default,,0,0,0,,Longer outings also need enough daylight and suitable
+Dialogue: 0,0:00:23.11,0:00:23.68,Default,,0,0,0,,conditions

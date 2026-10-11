@@ -6,7 +6,7 @@ The entry is one published DEV post with `devchallenge` and `hf26challenge`, usi
 
 | Category | What the category asks for | Current evidence / next step |
 | --- | --- | --- |
-| Overall | New project built during the window, open AI at its core, gets people outdoors | Strong theme fit. Public source, local evaluation and demo exist. Add actual hosted URL and a clear account of browser limits. Confirm actual work dates, not just commit dates. |
+| Overall | New project built during the window, open AI at its core, gets people outdoors | Strong theme fit. Public source, local evaluation and a public video demo exist. The template accepts a deployed link **or** video demo; a hosted URL is helpful but not required. Confirm actual work dates, not just commit dates. |
 | Gemma ($200) | Run, tune or serve Gemma in the project | Supported: real Ollama adapter and two validated live local evaluation cases. Verify hosted model and digest after deployment. |
 | Mastra ($100) | Orchestrate an agent/workflow over open models | Supported: actual planning workflow, validation and bounded repair/fallback. Include source and an explanation of why these stages matter. |
 | Render ($200) | Host an AI runtime or agent frontend / qualifying service | Pending: deploy the web frontend and workflow API, then demonstrate a working browser-to-API journey. A YAML file alone is insufficient. |
@@ -15,7 +15,7 @@ The entry is one published DEV post with `devchallenge` and `hf26challenge`, usi
 | SerpApi ($100) | Give an agent live search / fresh grounded results | Optional: implementation exists, but requires a configured key and a successful recorded search in the hosted flow. |
 | ElevenLabs ($100) | Agent voice, transcription, or generated demo narration | Not currently used: narration is edge-tts. An available ElevenLabs credit offer is not usage evidence. Replacing narration would be a separate optional step. |
 | Entire ($100) | Share/search agent work using Entire | Not established. DevRelay transcript export alone does not prove Entire integration. |
-| GitHub Copilot ($100) | Build with Copilot, qualifying Actions automation or review | Inspect and demonstrate qualifying actual usage before adding; this session used Codex. Repo presence alone is insufficient. |
+| GitHub Copilot ($100) | Build with Copilot, automate with GitHub Actions or review with Copilot | Supported through the Actions route: `.github/workflows/ci.yml` runs typecheck, tests, build, Expo dependency check and native exports on pushes/PRs. [A successful public run](https://github.com/quangvinhlee/Outwards-Days/actions/runs/38137336342) verifies execution. Say explicitly that this is GitHub Actions usage, not Copilot coding-agent usage. This is weaker category evidence than the core Gemma/Mastra work. |
 | TabPFN ($200) | Tabular forecasting, prediction or classification | Not used. |
 | Tinker ($200) | Fine-tune and show measurable improvement | Not used. |
 | Arduino ($200) | UNO Q / qualifying physical AI build | Not used. |
@@ -24,6 +24,6 @@ The entry is one published DEV post with `devchallenge` and `hf26challenge`, usi
 | Temporal ($100) | Durable agent workflow using Temporal | Not used. Mastra workflow/job code is not Temporal usage. |
 | Tiger Data ($100) | pgvector, vector/keyword search or Tiger MCP usage | Not used. |
 
-Recommended focus: Gemma and Mastra now; add Render, DigitalOcean and MongoDB Atlas after the planned deployment genuinely works. Do not add new integrations merely to lengthen the list before the deadline. A real outdoor trial is optional bonus evidence; describe it only if a person actually does it.
+Recommended focus: Gemma and Mastra, with GitHub Actions accurately described under the GitHub Copilot category. Add Render, DigitalOcean and MongoDB Atlas after the planned deployment genuinely works. Do not add new integrations merely to lengthen the list before the deadline. A real outdoor trial is optional bonus evidence; describe it only if a person actually does it.
 
 DevRelay found an offer for three months of ElevenLabs Creator with no credit card required and one code per account, but no Render/DigitalOcean/Atlas offer was returned for this user's Hacktoberfest participation. No promo code was claimed and no sponsor skill was installed.

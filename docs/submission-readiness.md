@@ -8,11 +8,11 @@ Entry is a published DEV post with devchallenge and hf26challenge tags; this is 
 - Draft follows the official template in docs/submission-draft.md.
 - Repository is publicly readable at https://github.com/quangvinhlee/Outwards-Days.
 - Git history records initial project commits on 11 October, inside the challenge window. Confirm actual work began within the window; commit dates alone cannot prove that.
-- Candidate prize categories: Gemma and Mastra, backed by implementation and recorded evaluations.
-- Primary video: docs/video/outwards-days-full-narrated.mp4. Short voiced video: docs/video/outwards-days-demo-voiced.mp4. Upload and replace the video TODO before publishing.
+- Candidate prize categories: Gemma and Mastra, backed by implementation and recorded evaluations; GitHub Actions automation is also documented under the challenge's GitHub Copilot category.
+- Primary video: docs/video/outwards-days-full-narrated.mp4, linked from the public repository in the draft. Short voiced video: docs/video/outwards-days-demo-voiced.mp4. An externally hosted video embed would improve viewing, but the draft has a working public file link.
 - Original shared session could not be retrieved: attach/export its transcript to import it to DevRelay. Session sharing is optional for this challenge.
 - Physical-device and outdoor testing remain unverified. An outdoor test is optional bonus evidence, not a completed result.
-- Fill the website/video placeholders and resolve or remove the optional session TODO before final publication. Review factual claims and publish the DEV entry before the deadline.
+- The current submission draft links a public video in the repository and has no website or session placeholder. The challenge template accepts a deployed link or a video demo. Review factual claims and publish the DEV entry before the deadline; add a verified website URL if deployment finishes in time.
 - No challenge entry has been published or submitted by this work.
 - Private DEV draft (AI disclosure: some_ai): https://dev.to/quangvinhlee/outwards-days-make-a-little-room-for-outside-1kmn-temp-slug-8115898/edit
 - Video decoded without errors; dimensions 720 × 1920, H.264, duration 39.72 seconds.

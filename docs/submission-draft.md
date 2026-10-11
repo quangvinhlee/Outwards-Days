@@ -46,5 +46,6 @@ This is not an offline AI app on the phone. Generating a new plan needs the back
 
 - **Best Use of Gemma:** Gemma 4 E2B supplies the activity choices and personalized wording. The repository includes the real Ollama integration, model digest, and local evaluation results.
 - **Best Use of Mastra:** The planning workflow coordinates context gathering, model generation, validation, bounded repair, and a clearly labelled fallback.
+- **Best Use of GitHub Copilot (GitHub Actions route):** [GitHub Actions](https://github.com/quangvinhlee/Outwards-Days/actions/runs/38137336342) automatically checks types, tests, builds, dependency compatibility, and Expo native exports on pushes and pull requests. I used Actions automation for this category; I am not claiming to have built the app with Copilot.
 
 Render, DigitalOcean, and MongoDB Atlas are planned for the hosted release, so I am not entering their categories on deployment plans alone. AI assistance was used in building the project and drafting this post.

@@ -1,0 +1,164 @@
+{
+  "recordedAt": "2026-10-11T03:41:46.008Z",
+  "model": "gemma4:e2b",
+  "digest": "b37049369adfe3d2b653af0ab301a062ca5cbe96ace6aa0d3f2559ee9b563fc2",
+  "sampleSize": 5,
+  "inferenceCases": 3,
+  "rejectedAttempts": 2,
+  "liveSuccesses": 2,
+  "fallbacks": 1,
+  "repairAttempts": 1,
+  "results": [
+    {
+      "name": "work-and-lunch",
+      "source": "gemma",
+      "attempts": 1,
+      "latencyMs": 2390,
+      "activities": [
+        {
+          "category": "walk",
+          "long": false,
+          "destination": null,
+          "activityMinutes": 25,
+          "totalMinutes": 40,
+          "start": "2026-10-12T06:00:00.000Z",
+          "end": "2026-10-12T06:40:00.000Z"
+        },
+        {
+          "category": "park",
+          "long": false,
+          "destination": null,
+          "activityMinutes": 15,
+          "totalMinutes": 30,
+          "start": "2026-10-13T01:00:00.000Z",
+          "end": "2026-10-13T01:30:00.000Z"
+        },
+        {
+          "category": "walk",
+          "long": false,
+          "destination": null,
+          "activityMinutes": 25,
+          "totalMinutes": 40,
+          "start": "2026-10-14T06:00:00.000Z",
+          "end": "2026-10-14T06:40:00.000Z"
+        },
+        {
+          "category": "park",
+          "long": false,
+          "destination": null,
+          "activityMinutes": 25,
+          "totalMinutes": 40,
+          "start": "2026-10-15T06:00:00.000Z",
+          "end": "2026-10-15T06:40:00.000Z"
+        }
+      ],
+      "notice": "Personalized with Gemma · schedule and time budgets checked by OutsideWeek."
+    },
+    {
+      "name": "nearby-parks",
+      "source": "basic",
+      "attempts": 2,
+      "latencyMs": 2730,
+      "activities": [
+        {
+          "category": "walk",
+          "long": false,
+          "destination": "University Lawn",
+          "activityMinutes": 25,
+          "totalMinutes": 50,
+          "start": "2026-10-12T06:00:00.000Z",
+          "end": "2026-10-12T06:50:00.000Z"
+        },
+        {
+          "category": "walk",
+          "long": false,
+          "destination": "Flagstaff Gardens",
+          "activityMinutes": 5,
+          "totalMinutes": 30,
+          "start": "2026-10-13T01:00:00.000Z",
+          "end": "2026-10-13T01:30:00.000Z"
+        },
+        {
+          "category": "park",
+          "long": false,
+          "destination": "Eight Hour Reserve",
+          "activityMinutes": 25,
+          "totalMinutes": 50,
+          "start": "2026-10-14T06:00:00.000Z",
+          "end": "2026-10-14T06:50:00.000Z"
+        },
+        {
+          "category": "park",
+          "long": false,
+          "destination": null,
+          "activityMinutes": 25,
+          "totalMinutes": 50,
+          "start": "2026-10-15T06:00:00.000Z",
+          "end": "2026-10-15T06:50:00.000Z"
+        }
+      ],
+      "notice": "Basic catalogue suggestions · live AI was unavailable or did not pass validation."
+    },
+    {
+      "name": "longer-outing-with-forecast",
+      "source": "gemma",
+      "attempts": 1,
+      "latencyMs": 13429,
+      "activities": [
+        {
+          "category": "walk",
+          "long": false,
+          "destination": null,
+          "activityMinutes": 25,
+          "totalMinutes": 40,
+          "start": "2026-10-12T06:00:00.000Z",
+          "end": "2026-10-12T06:40:00.000Z"
+        },
+        {
+          "category": "walk",
+          "long": false,
+          "destination": null,
+          "activityMinutes": 15,
+          "totalMinutes": 30,
+          "start": "2026-10-13T01:00:00.000Z",
+          "end": "2026-10-13T01:30:00.000Z"
+        },
+        {
+          "category": "park",
+          "long": false,
+          "destination": null,
+          "activityMinutes": 25,
+          "totalMinutes": 40,
+          "start": "2026-10-14T06:00:00.000Z",
+          "end": "2026-10-14T06:40:00.000Z"
+        },
+        {
+          "category": "park",
+          "long": true,
+          "destination": null,
+          "activityMinutes": 90,
+          "totalMinutes": 120,
+          "start": "2026-10-16T22:00:00.000Z",
+          "end": "2026-10-17T00:00:00.000Z"
+        }
+      ],
+      "notice": "Personalized with Gemma · schedule and time budgets checked by OutsideWeek."
+    },
+    {
+      "name": "no-availability",
+      "source": "basic",
+      "attempts": 0,
+      "latencyMs": 5,
+      "activities": [],
+      "notice": "No suitable outdoor time remains with your current limits."
+    },
+    {
+      "name": "no-garden-access",
+      "source": "basic",
+      "attempts": 0,
+      "latencyMs": 5,
+      "activities": [],
+      "notice": "No suitable outdoor time remains with your current limits."
+    }
+  ]
+}

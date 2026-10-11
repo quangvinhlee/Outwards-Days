@@ -1,0 +1,64 @@
+{
+  "recordedAt": "2026-10-10T11:11:23.183Z",
+  "model": "gemma3:4b-it-q4_K_M",
+  "digest": "68ceab7e468a31c988b44d5a4984a0e21f58c4f7158c6ce29c1804babac38df7",
+  "sampleSize": 3,
+  "liveSuccesses": 0,
+  "fallbacks": 2,
+  "repairAttempts": 1,
+  "results": [
+    {
+      "name": "work-and-lunch",
+      "source": "basic",
+      "attempts": 2,
+      "latencyMs": 27479,
+      "activities": [
+        {
+          "category": "walk",
+          "activityMinutes": 25,
+          "totalMinutes": 40,
+          "start": "2026-10-12T06:00:00.000Z",
+          "end": "2026-10-12T06:40:00.000Z"
+        },
+        {
+          "category": "walk",
+          "activityMinutes": 15,
+          "totalMinutes": 30,
+          "start": "2026-10-13T01:00:00.000Z",
+          "end": "2026-10-13T01:30:00.000Z"
+        },
+        {
+          "category": "walk",
+          "activityMinutes": 25,
+          "totalMinutes": 40,
+          "start": "2026-10-14T06:00:00.000Z",
+          "end": "2026-10-14T06:40:00.000Z"
+        },
+        {
+          "category": "walk",
+          "activityMinutes": 25,
+          "totalMinutes": 40,
+          "start": "2026-10-15T06:00:00.000Z",
+          "end": "2026-10-15T06:40:00.000Z"
+        }
+      ],
+      "notice": "Basic catalogue suggestions · live AI was unavailable or did not pass validation."
+    },
+    {
+      "name": "no-availability",
+      "source": "basic",
+      "attempts": 0,
+      "latencyMs": 10,
+      "activities": [],
+      "notice": "No suitable outdoor time remains with your current limits."
+    },
+    {
+      "name": "no-garden-access",
+      "source": "basic",
+      "attempts": 0,
+      "latencyMs": 14,
+      "activities": [],
+      "notice": "No suitable outdoor time remains with your current limits."
+    }
+  ]
+}

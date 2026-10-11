@@ -339,7 +339,7 @@ const modelStep = createStep({
         ? "No suitable outdoor time remains with your current limits."
         : source === "basic"
           ? "Basic catalogue suggestions · live AI was unavailable or did not pass validation."
-          : "Personalized with Gemma · schedule and time budgets checked by OutsideWeek.",
+          : "Personalized with Gemma · schedule and time budgets checked by Outwards Days.",
       activities: [
         ...c.existing.filter((a) => a.state !== "suggested"),
         ...generated,

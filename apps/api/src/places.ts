@@ -289,7 +289,7 @@ export async function nearbyPlaces(p: Preferences): Promise<Destination[]> {
       const response = await fetch(url, {
         headers: {
           "User-Agent":
-            "OutsideWeek/0.1 (nearby outdoor planner; contact via project repository)",
+            "Outwards-Days/0.1 (nearby outdoor planner; contact via project repository)",
         },
         signal: AbortSignal.timeout(22000),
       });
@@ -344,7 +344,7 @@ async function nearbyHikes(
       const response = await fetch(url, {
         headers: {
           "User-Agent":
-            "OutsideWeek/0.1 (nearby outdoor planner; contact via project repository)",
+            "Outwards-Days/0.1 (nearby outdoor planner; contact via project repository)",
         },
         signal: AbortSignal.timeout(22000),
       });

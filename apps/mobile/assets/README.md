@@ -1,4 +1,4 @@
-# OutsideWeek illustration
+# Outwards Days illustration
 
 `outside-path.jpg` is an original AI-generated decorative illustration used by the Today and Week screens. It is a generic imagined outdoor scene, not a photograph of any named destination. The app keeps the image local so it is available offline. The 1080-pixel JPEG is approximately 204 KB.
 

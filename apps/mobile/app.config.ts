@@ -1,7 +1,7 @@
 export default {
   expo: {
-    name: "OutsideWeek",
-    slug: "outsideweek",
+    name: "Outwards Days",
+    slug: "outwards-days",
     scheme: "outsideweek",
     version: "0.1.0",
     orientation: "portrait",
@@ -14,7 +14,7 @@ export default {
       "expo-sqlite",
       "expo-secure-store",
       "expo-status-bar",
-      ["expo-image-picker", { cameraPermission: "Allow OutsideWeek to take photos for optional outdoor missions.", microphonePermission: false }],
+      ["expo-image-picker", { cameraPermission: "Allow Outwards Days to take photos for optional outdoor missions.", microphonePermission: false }],
       ["expo-notifications", { color: "#234E3D" }],
       [
         "expo-location",

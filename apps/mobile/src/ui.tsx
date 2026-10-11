@@ -226,7 +226,7 @@ export function Screen({ children, stack = false }: { children: React.ReactNode;
             <View style={{ width: 24, height: 24, borderRadius: 8, backgroundColor: colors.green, alignItems: "center", justifyContent: "center" }}>
               <Text style={{ color: colors.white, fontWeight: "800", fontSize: 15 }}>↗</Text>
             </View>
-            <Text style={[styles.eyebrow, { color: colors.ink, letterSpacing: 1.6 }]}>OutsideWeek</Text>
+            <Text style={[styles.eyebrow, { color: colors.ink, letterSpacing: 1.6 }]}>Outwards Days</Text>
           </View>
           <Text style={styles.small}>Go a little further</Text>
         </View> : null}

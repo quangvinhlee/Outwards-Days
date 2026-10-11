@@ -1,4 +1,4 @@
-# OutsideWeek
+# Outwards-Days
 
 A native outdoor planner for the time you actually have. Confirm your week, review small outdoor moments, accept one, and record how it went—even offline.
 
@@ -54,6 +54,6 @@ The live evaluation requires Ollama. It records actual source, validation result
 
 ## Scope and status
 
-This implements the plan's first playable product slice. Read [implementation status](docs/implementation-status.md) for verification evidence and remaining work. A sourced loop hike can be scheduled only when mapped distance, travel allowance, full time budget, daylight, weather and effort all fit. Otherwise it remains an idea. Mapped coverage is incomplete; straight-line distance is not travel time. See [place discovery](docs/places.md). Real-phone and real-outdoor demonstration require a person and remain explicit checklist items. Paid deployment, public repository publication and challenge submission have not been performed.
+This implements the plan's first playable product slice. Read [implementation status](docs/implementation-status.md) for verification evidence and remaining work. A sourced loop hike can be scheduled only when mapped distance, travel allowance, full time budget, daylight, weather and effort all fit. Otherwise it remains an idea. Mapped coverage is incomplete; straight-line distance is not travel time. See [place discovery](docs/places.md). Real-phone and real-outdoor demonstration require a person and remain explicit checklist items. Paid deployment and challenge submission have not been performed. Internal `@outsideweek/*` package names, the database name and the Android application ID remain stable so existing installations and local data continue to work.
 
 [Build plan](PROJECT_PLAN.md) · [Architecture](docs/architecture.md) · [Deployment](docs/deployment.md) · [Privacy](docs/privacy.md) · [Demo](docs/demo-script.md)

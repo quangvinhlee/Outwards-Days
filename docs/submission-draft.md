@@ -1,12 +1,12 @@
 ---
-title: OutsideWeek — a little room for outside
+title: Outwards Days — a little room for outside
 tags: devchallenge, hf26challenge, ai, opensource
 published: false
 ---
 
 # What I built
 
-OutsideWeek is a native mobile planner that starts with the week you actually have. A busy Saturday might get a small break; a free weekday can support a longer outing. The app asks you to confirm your availability each local week, then proposes outdoor activities within that schedule.
+Outwards Days is a native mobile planner that starts with the week you actually have. A busy Saturday might get a small break; a free weekday can support a longer outing. The app asks you to confirm your availability each local week, then proposes outdoor activities within that schedule.
 
 # How it works
 

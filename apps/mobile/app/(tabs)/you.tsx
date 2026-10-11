@@ -72,7 +72,7 @@ export default function You() {
         disabled={app.busy}
         onPress={() =>
           Alert.alert(
-            "Delete your OutsideWeek data?",
+            "Delete your Outwards Days data?",
             "This removes your server records, local plans, queued completions and guest identity. It cannot be undone.",
             [
               { text: "Keep my data", style: "cancel" },

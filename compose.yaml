@@ -1,0 +1,31 @@
+name: outsideweek
+services:
+  mongodb:
+    # MongoDB 8 currently refuses this host kernel; use the verified local 7.x image.
+    image: mongo:7@sha256:1f995ad6fdb93244a1addab1b58f934a0bc2f5643c38e02f5e9d7f0c7d227a7b
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MONGO_PORT:-27019}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:?Run pnpm setup:local first}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Run pnpm setup:local first}
+      MONGO_INITDB_DATABASE: outsideweek
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD:?Run pnpm setup:local first}
+    volumes:
+      - mongo_data:/data/db
+      - ./infra/mongo/init.cjs:/docker-entrypoint-initdb.d/01-outsideweek.js:ro
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "--eval",
+          "db.getSiblingDB('outsideweek').auth('outsideweek', process.env.MONGO_APP_PASSWORD)",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+volumes:
+  mongo_data:

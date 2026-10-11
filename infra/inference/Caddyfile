@@ -1,0 +1,21 @@
+{$INFERENCE_HOST} {
+  @chat {
+    path /api/chat
+    method POST
+    header Authorization "Bearer {$OLLAMA_SERVICE_TOKEN}"
+  }
+  handle @chat {
+    request_body {
+      max_size 128KB
+    }
+    reverse_proxy 127.0.0.1:11434 {
+      header_up -Authorization
+      transport http {
+        response_header_timeout 100s
+      }
+    }
+  }
+  handle {
+    respond "Unauthorized or unsupported endpoint" 401
+  }
+}

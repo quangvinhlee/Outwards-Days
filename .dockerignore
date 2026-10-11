@@ -1,0 +1,10 @@
+node_modules
+**/node_modules
+**/dist
+**/.expo
+**/android
+**/ios
+.env
+**/.env
+.data
+.git

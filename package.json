@@ -1,0 +1,27 @@
+{
+  "name": "outsideweek",
+  "private": true,
+  "packageManager": "pnpm@10.32.1",
+  "type": "module",
+  "scripts": {
+    "dev:api": "pnpm --filter @outsideweek/api dev",
+    "dev:mobile": "pnpm --filter @outsideweek/mobile start",
+    "typecheck": "tsc --noEmit && pnpm --filter @outsideweek/mobile typecheck",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json",
+    "setup:local": "node scripts/setup-local.mjs",
+    "db:start": "docker compose up -d --wait mongodb",
+    "db:stop": "docker compose stop mongodb",
+    "eval:live": "tsx --env-file-if-exists=.env evals/live.ts",
+    "check:local": "node --env-file=.env scripts/doctor.mjs",
+    "test:smoke": "node --env-file=.env scripts/smoke-api.mjs"
+  },
+  "devDependencies": {
+    "@types/luxon": "3.7.6",
+    "@types/node": "26.6.5",
+    "prettier": "3.9.10",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

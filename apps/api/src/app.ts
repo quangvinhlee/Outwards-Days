@@ -148,7 +148,11 @@ export async function buildApp(
                 ? "RATE_LIMITED"
                 : "REQUEST_FAILED",
         message:
-          status >= 500
+          error instanceof z.ZodError
+            ? error.issues.slice(0, 3).map((issue) =>
+                `${issue.path.join(".") || "Input"}: ${issue.message}`,
+              ).join(" ")
+            : status >= 500
             ? "The request could not be completed. Please retry."
             : error instanceof Error
               ? error.message

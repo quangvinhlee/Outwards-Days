@@ -46,7 +46,7 @@ export default function Account() {
       <View style={{ gap: 14 }}>
         <Field label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" autoComplete="email" />
         <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry autoCapitalize="none" autoComplete={mode === "register" ? "new-password" : "current-password"} />
-        {mode === "register" ? <Text style={styles.small}>Use at least 12 characters. There is no password reset yet, so keep it somewhere safe.</Text> : null}
+        {mode === "register" ? <Text style={styles.small}>Use at least 6 characters. There is no password reset yet, so keep it somewhere safe.</Text> : null}
         {message ? <Text accessibilityRole="alert" style={styles.error}>{message}</Text> : null}
         <Button
           label={mode === "register" ? "Create account" : "Sign in"}

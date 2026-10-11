@@ -89,6 +89,17 @@ async function planned(verifyPhoto?: (image: string, target: string) => Promise<
   return { ...ctx, plan };
 }
 describe("API ownership and atomic transitions", () => {
+  it("accepts six-character passwords and returns readable validation errors", async () => {
+    const { app, call } = await setup();
+    const short = await call("POST", "/v1/auth/register", { email: "six@example.com", password: "12345" });
+    expect(short.statusCode).toBe(422);
+    expect(short.json().error.message).toBe("password: Use at least 6 characters.");
+    const created = await call("POST", "/v1/auth/register", { email: "six@example.com", password: "123456" });
+    expect(created.statusCode).toBe(200);
+    const login = await app.inject({ method: "POST", url: "/v1/auth/login", payload: { email: "six@example.com", password: "123456" } });
+    expect(login.statusCode).toBe(200);
+    await app.close();
+  });
   it("claims an existing guest profile and restores its history after signing in elsewhere", async () => {
     const { app, call, plan, token } = await planned();
     const email = "Walker@Example.com";

@@ -1,0 +1,24 @@
+# Development setup
+
+1. Install Node 24, pnpm 10.32.1, Docker with Compose, and Ollama. Run `pnpm install --frozen-lockfile` in the repository root.
+2. Run `pnpm setup:local`. It generates `.env` and `apps/mobile/.env`, starts authenticated MongoDB, and migrates any previous `.data/state.json` records without replacing existing MongoDB records. Do not copy example placeholders over generated credentials.
+3. Run `ollama pull gemma4:e2b` if the model is not already installed. Keep Ollama running on loopback port 11434.
+4. Run `pnpm dev:api`. `GET http://localhost:3100/healthz` should return `{"status":"ok"}`.
+5. In another terminal, run `pnpm dev:mobile`. Metro uses port 8083. The generated mobile environment uses your computer's LAN address; a physical phone must share that network. For Android emulator-only setup, set `EXPO_PUBLIC_API_BASE_URL=http://10.0.2.2:3100` in `apps/mobile/.env`. Restart Metro after editing it. Update this address if your computer's IP changes.
+6. Open Expo Go matching SDK 57 or run `pnpm --filter @outsideweek/mobile android`. Native Android builds require Java 17 and Android SDK tools. iOS native builds require a Mac and Xcode.
+   For the browser version, press `w` in Metro or run `pnpm --filter @outsideweek/mobile exec expo start --web --port 8083`, then open `http://localhost:8083`. The web client calls the API on the same hostname at port 3100. On another device, open `http://<computer-LAN-IP>:8083` with both ports reachable. Browser geolocation can request that device's approximate location on localhost or HTTPS; Android emulator location is simulated.
+7. Run `pnpm check:local` for database, model, API and mobile configuration checks. `pnpm test:smoke` exercises a temporary guest through generation, acceptance and duplicate-safe sync, then removes it.
+
+## Environment and persistence
+
+The root `.env` holds database passwords and server-only configuration. The mobile `.env` holds only the public API URL. Both files are ignored by Git and created with owner-only file permissions. Never put secrets in `EXPO_PUBLIC_*` variables.
+
+MongoDB binds to `127.0.0.1:27019`. The API uses a database-scoped read/write user, separate from the administrator. Data survives container restarts in the `outsideweek_mongo_data` volume. `pnpm db:stop` stops MongoDB without deleting data; `pnpm db:start` starts it again. Avoid `docker compose down -v`, which deletes the database volume. Initializer credentials apply on first creation only: editing environment passwords alone does not rotate existing MongoDB users.
+
+Setup preserves existing non-empty environment values. For an existing remote MongoDB configuration, review your root `.env` before running setup: migration uses its configured URI. Local file persistence remains a development fallback when no MongoDB URI is configured, and supports only one API process.
+
+Approximate location enables nearby OpenStreetMap parks, riverside discovery and sourced loop hikes. Hiking uses an OSRM driving estimate, strictly under the selected one-way limit (default three hours). Local development uses the OSRM demo service; production needs a managed OSRM-compatible `ROUTING_BASE_URL`. A hosted browser client also needs `WEB_ORIGIN` for API CORS and `EXPO_PUBLIC_WEB_API_BASE_URL` if the API is not on the web hostname at port 3100. If the simulator or device cannot provide a location, enter approximate latitude and longitude in preferences; both values are required for nearby discovery and are rounded to two decimals when saved. Local development uses public Overpass for hiking routes and Photon for nearby parks, with a low request rate and six-hour MongoDB place cache; it can be busy or unavailable. Set `OVERPASS_BASE_URL` to a managed or self-hosted Overpass-compatible endpoint for production. SerpApi is optional: add your own `SERPAPI_API_KEY` and restart the API to add map-search park results. Open-Meteo needs no key. Local Ollama needs no service token; production requires authenticated HTTPS inference and a production database configuration.
+
+A session is created when the user first saves preferences. Cached plans remain readable if a session expires. This single-device prototype has no identity recovery mechanism; do not delete SecureStore if saved data matters. The browser stores its guest session and cached plan in localStorage, appropriate only for local prototype use. Public deployment needs stronger authentication and a browser storage review.
+
+Manual area entry enables optional place search. Approximate foreground coordinates enable forecasts/daylight. Denying location leaves short familiar activities available. Longer outings that depend on daylight are withheld without forecast data.

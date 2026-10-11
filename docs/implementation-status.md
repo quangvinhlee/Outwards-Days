@@ -9,7 +9,7 @@ Updated on 11 October 2026. The original plan is preserved as the specification;
 - Redesigned Today, Week, You and outing detail screens with a local illustrated outdoor hero, compact activity cards, category-specific visual cues, clearer time/place/mission summaries, and larger accessible navigation targets. The illustration is decorative and does not claim to show a mapped destination.
 - Explicit seven-day review, reusable work hours, sleep/overnight blocks, lunch gaps, preferred outdoor windows and local schedule drafts.
 - Workday morning protection, wake and after-work buffers, conservative evening suggestions on weekdays with no work block, explicit full-day-off marking, optional early-morning preference, and earlier starts reserved for longer free-day outings. Existing accepted activities remain valid when a soft time preference changes.
-- Secure guest sessions, expiry/renewal, owner-scoped routes, compare-and-set versions, durable generation jobs with leases, and stale-publication protection.
+- Guest and email/password sessions, guest-to-account upgrade, expiry/renewal, owner-scoped routes, compare-and-set versions, durable generation jobs with leases, and stale-publication protection. Password reset and email verification remain future work.
 - Live Ollama structured-output adapter with one repair attempt and labelled basic fallback.
 - Acceptance validation, replacement, rescheduling, conditions refresh, skip/complete/partly-complete, feedback, history and deletion.
 - SQLite plan cache, completion outbox, pending outcome overlays, foreground/manual retry and retained permanent errors.

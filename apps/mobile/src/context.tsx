@@ -20,6 +20,7 @@ import {
 import {
   api,
   ApiError,
+  removeAccountSession,
   removeSession,
   saveSession,
   session,
@@ -40,6 +41,7 @@ function localWeek(p: Preferences) {
 }
 function useStore() {
   const [data, setData] = useState(initial),
+    [accountEmail, setAccountEmail] = useState<string | undefined>(),
     [ready, setReady] = useState(false),
     [error, setError] = useState(""),
     [pending, setPending] = useState<storage.Queued[]>([]),
@@ -71,10 +73,7 @@ function useStore() {
     try {
       const guest = await session();
       if (!guest) {
-        if (await storage.read("snapshot"))
-          throw new Error(
-            "The guest session is missing. Your cached data is preserved.",
-          );
+        setAccountEmail(undefined);
         return;
       }
       for (const item of await storage.queue()) {
@@ -97,12 +96,14 @@ function useStore() {
         preferences: Preferences;
         weekStart: string;
         confirmed: boolean;
+        account: { email: string } | null;
       }>("/v1/me");
+      setAccountEmail(me.account?.email);
       const [history, schedule] = await Promise.all([
         api<{ plans: Plan[] }>("/v1/history"),
         api<Schedule | null>(`/v1/schedules/${me.weekStart}`),
       ]);
-      await commit({ ...me, plans: history.plans, schedule });
+      await commit({ preferences: me.preferences, weekStart: me.weekStart, confirmed: me.confirmed, plans: history.plans, schedule });
       setError("");
       if (Date.parse(guest.expiresAt) - Date.now() < 7 * 86400000) {
         const renewed = await api<{ expiresAt: string }>(
@@ -117,6 +118,14 @@ function useStore() {
         ),
       );
     } catch (e) {
+      const active = await session();
+      if (e instanceof ApiError && e.status === 401 && active?.email) {
+        await removeAccountSession();
+        await storage.clear();
+        setData(initial);
+        setAccountEmail(undefined);
+        setRunId(undefined);
+      }
       setError(e instanceof Error ? e.message : "Could not refresh.");
     } finally {
       setPending(await storage.queue());
@@ -125,8 +134,9 @@ function useStore() {
   useEffect(() => {
     let mounted = true;
     void (async () => {
+      const active = await session();
       const cached = await storage.read<storage.Snapshot>("snapshot");
-      if (cached && mounted) {
+      if (cached && active && (!active.email || Date.parse(active.expiresAt) > Date.now()) && mounted) {
         const weekStart = localWeek(cached.preferences);
         setData({
           ...cached,
@@ -135,8 +145,10 @@ function useStore() {
           schedule: weekStart === cached.weekStart ? cached.schedule : null,
         });
       }
-      setPending(await storage.queue());
-      setRunId(await storage.read<string>("runId"));
+      if (active) {
+        setPending(await storage.queue());
+        setRunId(await storage.read<string>("runId"));
+      }
       if (mounted) setReady(true);
       await refresh();
     })().catch((e) => {
@@ -207,6 +219,50 @@ function useStore() {
       await refresh(true);
     });
   }
+  async function register(email: string, password: string) {
+    await action(async () => {
+      if (!(await session())) {
+        await storage.clear();
+        await startSession();
+      }
+      const next = await api<import("./api").Session>("/v1/auth/register", "POST", { email, password });
+      await saveSession(next);
+      await refresh(true);
+    });
+  }
+  async function signIn(email: string, password: string, discardPending = false) {
+    await action(async () => {
+      if (await session()) {
+        await refresh(true);
+        if ((await storage.queue()).length && !discardPending)
+          throw new Error("Sync or resolve saved completions before switching accounts.");
+      }
+      const next = await api<import("./api").Session>("/v1/auth/login", "POST", { email, password });
+      await reconcileReminders([], { ...data.preferences, reminders: false });
+      await storage.clear();
+      setData(initial);
+      setPending([]);
+      setRunId(undefined);
+      await saveSession(next, true);
+      await refresh(true);
+    });
+  }
+  async function signOut(discardPending = false) {
+    await action(async () => {
+      await refresh(true);
+      if ((await storage.queue()).length && !discardPending)
+        throw new Error("Sync or resolve saved completions before signing out.");
+      await api("/v1/auth/logout", "POST");
+      await reconcileReminders([], { ...data.preferences, reminders: false });
+      await storage.clear();
+      await removeAccountSession();
+      setAccountEmail(undefined);
+      setData(initial);
+      setPending([]);
+      setRunId(undefined);
+      await refresh(true);
+    });
+  }
   async function confirm(s: Schedule) {
     await action(async () => {
       await api(`/v1/schedules/${s.weekStart}`, "PUT", s);
@@ -263,13 +319,17 @@ function useStore() {
   }
   async function deleteData() {
     await action(async () => {
+      const active = await session();
       await api("/v1/me", "DELETE");
       await reconcileReminders([], { ...data.preferences, reminders: false });
-      await removeSession();
+      if (active?.email) await removeAccountSession();
+      else await removeSession();
       await storage.clear();
       setData(initial);
       setPending([]);
       setRunId(undefined);
+      setAccountEmail(undefined);
+      await refresh(true);
     });
   }
   const plans = data.plans.map((p) => ({
@@ -281,6 +341,7 @@ function useStore() {
   }));
   return {
     data: { ...data, plans },
+    accountEmail,
     ready,
     error,
     setError,
@@ -291,6 +352,9 @@ function useStore() {
     setLater,
     refresh,
     preferences,
+    register,
+    signIn,
+    signOut,
     confirm,
     generate,
     activityAction,

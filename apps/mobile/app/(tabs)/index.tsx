@@ -26,8 +26,9 @@ export default function Today() {
           label="Make room for outside"
           onPress={() => router.push("/onboarding")}
         />
+        <Button label="Sign in to an existing account" secondary onPress={() => router.push("/account")} />
         <Text style={styles.small}>
-          No password. No pressure. Just your kind of fresh air.
+          Explore as a guest, or create an account to keep your plans across devices.
         </Text>
       </Screen>
     );

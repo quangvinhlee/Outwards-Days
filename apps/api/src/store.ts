@@ -29,6 +29,7 @@ export class ApiError extends Error {
   }
 }
 export type Session = { hash: string; userId: string; expiresAt: Date };
+export type Account = { userId: string; email: string; passwordHash: string; createdAt: string };
 export interface Store {
   create(state: UserState): Promise<void>;
   get(id: string): Promise<UserState | undefined>;
@@ -37,6 +38,10 @@ export interface Store {
   remove(id: string): Promise<void>;
   session(hash: string): Promise<Session | undefined>;
   saveSession(session: Session): Promise<void>;
+  removeSession(hash: string): Promise<void>;
+  accountByEmail(email: string): Promise<Account | undefined>;
+  accountByUser(userId: string): Promise<Account | undefined>;
+  createAccount(account: Account): Promise<void>;
   close(): Promise<void>;
 }
 export async function mutate<T>(
@@ -66,6 +71,7 @@ export async function mutate<T>(
 export class MemoryStore implements Store {
   users = new Map<string, UserState>();
   sessions = new Map<string, Session>();
+  accounts = new Map<string, Account>();
   async create(s: UserState) {
     this.users.set(s.id, structuredClone(s));
   }
@@ -83,6 +89,8 @@ export class MemoryStore implements Store {
   }
   async remove(id: string) {
     this.users.delete(id);
+    for (const [email, account] of this.accounts)
+      if (account.userId === id) this.accounts.delete(email);
     for (const [h, s] of this.sessions)
       if (s.userId === id) this.sessions.delete(h);
   }
@@ -91,6 +99,20 @@ export class MemoryStore implements Store {
   }
   async saveSession(s: Session) {
     this.sessions.set(s.hash, s);
+  }
+  async removeSession(hash: string) {
+    this.sessions.delete(hash);
+  }
+  async accountByEmail(email: string) {
+    return this.accounts.get(email);
+  }
+  async accountByUser(userId: string) {
+    return [...this.accounts.values()].find((account) => account.userId === userId);
+  }
+  async createAccount(account: Account) {
+    if (this.accounts.has(account.email) || await this.accountByUser(account.userId))
+      throw new ApiError(409, "ACCOUNT_EXISTS", "An account already exists for this email or profile.");
+    this.accounts.set(account.email, account);
   }
   async close() {}
 }
@@ -107,6 +129,7 @@ export class FileStore extends MemoryStore {
         await readFile(join(this.directory, "state.json"), "utf8"),
       );
       this.users = new Map(raw.users);
+      this.accounts = new Map(raw.accounts ?? []);
       this.sessions = new Map(
         raw.sessions.map(([h, s]: [string, Session]) => [
           h,
@@ -121,6 +144,7 @@ export class FileStore extends MemoryStore {
     const data = JSON.stringify({
       users: [...this.users],
       sessions: [...this.sessions],
+      accounts: [...this.accounts],
     });
     const next = this.queue.then(async () => {
       await writeFile(join(this.directory, "state.tmp"), data, { mode: 0o600 });
@@ -145,6 +169,14 @@ export class FileStore extends MemoryStore {
     await super.saveSession(s);
     await this.persist();
   }
+  override async removeSession(hash: string) {
+    await super.removeSession(hash);
+    await this.persist();
+  }
+  override async createAccount(account: Account) {
+    await super.createAccount(account);
+    await this.persist();
+  }
   override async remove(id: string) {
     await super.remove(id);
     await this.persist();
@@ -154,10 +186,12 @@ export class MongoStore implements Store {
   client: MongoClient;
   users: Collection<UserState>;
   sessions: Collection<Session>;
+  accounts: Collection<Account>;
   constructor(uri: string, db: string) {
     this.client = new MongoClient(uri);
     this.users = this.client.db(db).collection("users");
     this.sessions = this.client.db(db).collection("sessions");
+    this.accounts = this.client.db(db).collection("accounts");
   }
   async open() {
     await this.client.connect();
@@ -167,6 +201,8 @@ export class MongoStore implements Store {
       { expiresAt: 1 },
       { expireAfterSeconds: 0 },
     );
+    await this.accounts.createIndex({ email: 1 }, { unique: true });
+    await this.accounts.createIndex({ userId: 1 }, { unique: true });
   }
   async create(s: UserState) {
     await this.users.insertOne(s);
@@ -189,6 +225,7 @@ export class MongoStore implements Store {
   async remove(id: string) {
     await this.users.deleteOne({ id });
     await this.sessions.deleteMany({ userId: id });
+    await this.accounts.deleteOne({ userId: id });
   }
   async session(hash: string) {
     return (
@@ -198,6 +235,24 @@ export class MongoStore implements Store {
   }
   async saveSession(s: Session) {
     await this.sessions.replaceOne({ hash: s.hash }, s, { upsert: true });
+  }
+  async removeSession(hash: string) {
+    await this.sessions.deleteOne({ hash });
+  }
+  async accountByEmail(email: string) {
+    return (await this.accounts.findOne({ email }, { projection: { _id: 0 } })) ?? undefined;
+  }
+  async accountByUser(userId: string) {
+    return (await this.accounts.findOne({ userId }, { projection: { _id: 0 } })) ?? undefined;
+  }
+  async createAccount(account: Account) {
+    try {
+      await this.accounts.insertOne(account);
+    } catch (error) {
+      if ((error as { code?: number }).code === 11000)
+        throw new ApiError(409, "ACCOUNT_EXISTS", "An account already exists for this email or profile.");
+      throw error;
+    }
   }
   async close() {
     await this.client.close();

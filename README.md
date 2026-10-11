@@ -2,6 +2,8 @@
 
 A native outdoor planner for the time you actually have. Confirm your week, review small outdoor moments, accept one, and record how it went—even offline.
 
+Start as a guest, then create an email/password account to keep that profile's schedules, plans and activity history across devices. Existing guests can upgrade without losing their server data; signing into another account switches to that account's separate history. See [setup](docs/setup.md) and [privacy](docs/privacy.md) for current account and browser-session limits.
+
 Built with Expo / React Native, Fastify, Luxon, Zod, a Mastra workflow, and Gemma through Ollama. The scheduler owns availability and time budgets. The model chooses and personalizes activities; it cannot override constraints.
 
 ## Run locally

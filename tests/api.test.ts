@@ -70,6 +70,7 @@ async function setup(duringGeneration?: (store: MemoryStore) => void, verifyPhot
     app,
     tick,
     call,
+    token: guest.json().token as string,
     setNow: (n: string) => {
       now = n;
     },
@@ -88,6 +89,44 @@ async function planned(verifyPhoto?: (image: string, target: string) => Promise<
   return { ...ctx, plan };
 }
 describe("API ownership and atomic transitions", () => {
+  it("claims an existing guest profile and restores its history after signing in elsewhere", async () => {
+    const { app, call, plan, token } = await planned();
+    const email = "Walker@Example.com";
+    const password = "a long garden password";
+    const registered = await call("POST", "/v1/auth/register", { email, password });
+    expect(registered.statusCode).toBe(200);
+    const account = registered.json<{ token: string; userId: string; email: string }>();
+    expect(account.email).toBe("walker@example.com");
+    expect((await call("GET", "/v1/me")).statusCode).toBe(401);
+    const loggedIn = await app.inject({ method: "POST", url: "/v1/auth/login", payload: { email: "walker@example.com", password } });
+    expect(loggedIn.statusCode).toBe(200);
+    const otherDevice = { authorization: `Bearer ${loggedIn.json().token}` };
+    const me = await app.inject({ method: "GET", url: "/v1/me", headers: otherDevice });
+    expect(me.json().account.email).toBe("walker@example.com");
+    const history = await app.inject({ method: "GET", url: "/v1/history", headers: otherDevice });
+    expect(history.json().plans[0].activities[0].id).toBe(plan.activities[0].id);
+    expect(account.token).not.toBe(token);
+    const outsider = (await app.inject({ method: "POST", url: "/v1/sessions/guest" })).json();
+    expect((await app.inject({ method: "GET", url: `/v1/plans/${plan.weekStart}`, headers: { authorization: `Bearer ${outsider.token}` } })).json()).toBeNull();
+    expect((await app.inject({ method: "POST", url: `/v1/activities/${plan.activities[0].id}/accept`, headers: { authorization: `Bearer ${outsider.token}` }, payload: { revision: plan.revision } })).statusCode).toBe(404);
+    expect((await app.inject({ method: "POST", url: "/v1/auth/logout", headers: otherDevice })).statusCode).toBe(200);
+    expect((await app.inject({ method: "GET", url: "/v1/me", headers: otherDevice })).statusCode).toBe(401);
+    expect((await app.inject({ method: "GET", url: "/v1/me", headers: { authorization: `Bearer ${account.token}` } })).statusCode).toBe(200);
+    await app.close();
+  });
+  it("rejects duplicate accounts and wrong passwords, then frees email on deletion", async () => {
+    const { app, call } = await setup();
+    const credentials = { email: "me@example.com", password: "a safely long password" };
+    const first = await call("POST", "/v1/auth/register", credentials);
+    expect(first.statusCode).toBe(200);
+    expect((await app.inject({ method: "POST", url: "/v1/auth/login", payload: { ...credentials, password: "wrong" } })).statusCode).toBe(401);
+    const guest = (await app.inject({ method: "POST", url: "/v1/sessions/guest" })).json();
+    expect((await app.inject({ method: "POST", url: "/v1/auth/register", headers: { authorization: `Bearer ${guest.token}` }, payload: credentials })).statusCode).toBe(409);
+    const headers = { authorization: `Bearer ${first.json().token}` };
+    expect((await app.inject({ method: "DELETE", url: "/v1/me", headers })).statusCode).toBe(200);
+    expect((await app.inject({ method: "POST", url: "/v1/auth/register", headers: { authorization: `Bearer ${guest.token}` }, payload: credentials })).statusCode).toBe(200);
+    await app.close();
+  });
   it("accepts a still-valid outing after its scheduled start", async () => {
     const { app, call, plan, setNow } = await planned();
     const a = plan.activities[0];

@@ -9,21 +9,38 @@ export class ApiError extends Error {
     super(message);
   }
 }
-export type Session = { token: string; expiresAt: string };
-const sessionKey = "outsideweek.guest";
+export type Session = { token: string; expiresAt: string; userId?: string; email?: string };
+const guestKey = "outsideweek.guest";
+const accountKey = "outsideweek.account";
 export async function session(): Promise<Session | undefined> {
   const raw = Platform.OS === "web"
-    ? localStorage.getItem(sessionKey)
-    : await SecureStore.getItemAsync(sessionKey);
+    ? sessionStorage.getItem(accountKey) ?? localStorage.getItem(guestKey)
+    : await SecureStore.getItemAsync(accountKey) ?? await SecureStore.getItemAsync(guestKey);
   return raw ? JSON.parse(raw) as Session : undefined;
 }
-export async function saveSession(s: Session) {
-  if (Platform.OS === "web") localStorage.setItem(sessionKey, JSON.stringify(s));
-  else await SecureStore.setItemAsync(sessionKey, JSON.stringify(s));
+export async function saveSession(s: Session, preserveGuest = false) {
+  if (Platform.OS === "web") {
+    if (s.email) {
+      sessionStorage.setItem(accountKey, JSON.stringify(s));
+      if (!preserveGuest) localStorage.removeItem(guestKey);
+    } else localStorage.setItem(guestKey, JSON.stringify(s));
+  } else if (s.email) {
+    await SecureStore.setItemAsync(accountKey, JSON.stringify(s));
+    if (!preserveGuest) await SecureStore.deleteItemAsync(guestKey);
+  } else await SecureStore.setItemAsync(guestKey, JSON.stringify(s));
+}
+export async function removeAccountSession() {
+  if (Platform.OS === "web") sessionStorage.removeItem(accountKey);
+  else await SecureStore.deleteItemAsync(accountKey);
 }
 export async function removeSession() {
-  if (Platform.OS === "web") localStorage.removeItem(sessionKey);
-  else await SecureStore.deleteItemAsync(sessionKey);
+  if (Platform.OS === "web") {
+    sessionStorage.removeItem(accountKey);
+    localStorage.removeItem(guestKey);
+  } else {
+    await SecureStore.deleteItemAsync(accountKey);
+    await SecureStore.deleteItemAsync(guestKey);
+  }
 }
 export async function api<T>(
   path: string,

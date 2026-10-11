@@ -1,4 +1,4 @@
-import { Alert, Text, View } from "react-native";
+import { Alert, Platform, Text, View } from "react-native";
 import { router } from "expo-router";
 import { useApp } from "../../src/context";
 import { Button, Screen, colors, styles } from "../../src/ui";
@@ -21,6 +21,29 @@ export default function You() {
         label="Edit interests & preferences"
         onPress={() => router.push("/onboarding")}
       />
+      {app.accountEmail ? (
+        <View style={styles.card}>
+          <Text style={styles.heading}>Your account</Text>
+          <Text style={styles.body}>{app.accountEmail}</Text>
+          <Text style={styles.small}>Your plans, schedule, outings and history belong to this account.</Text>
+          <Button label="Sign out" secondary disabled={app.busy} onPress={() => {
+            if (!app.pending.length) return app.signOut();
+            const text = "Some completions have not synced. Signing out now removes those local drafts.";
+            if (Platform.OS === "web") {
+              if (window.confirm(text)) return app.signOut(true);
+            } else Alert.alert("Unsynced completions", text, [
+              { text: "Keep them", style: "cancel" },
+              { text: "Sign out anyway", style: "destructive", onPress: () => void app.signOut(true).catch(() => {}) },
+            ]);
+          }} />
+        </View>
+      ) : (
+        <View style={styles.card}>
+          <Text style={styles.heading}>Keep your outside story</Text>
+          <Text style={styles.body}>Create an account to bring this guest profile to another device, or sign in to an existing account.</Text>
+          <Button label="Create account or sign in" onPress={() => router.push("/account")} />
+        </View>
+      )}
       <Button
         label="Refresh & sync completions"
         secondary
@@ -61,7 +84,7 @@ export default function You() {
         </View>
       ))}
       <Text style={styles.small}>
-        Your guest identity belongs to this device. Availability and approximate
+        {app.accountEmail ? "Your account can be used on another device. " : "Your guest identity belongs to this device. "}Availability and approximate
         area are sent to the backend. Model requests contain eligible time slots
         and preferences, not your raw commitments. Forecasts: Open-Meteo.
         Discovery: SerpApi when configured.
@@ -73,7 +96,7 @@ export default function You() {
         onPress={() =>
           Alert.alert(
             "Delete your Outwards Days data?",
-            "This removes your server records, local plans, queued completions and guest identity. It cannot be undone.",
+            "This removes your current profile’s server records, local plans and queued completions. It cannot be undone.",
             [
               { text: "Keep my data", style: "cancel" },
               {

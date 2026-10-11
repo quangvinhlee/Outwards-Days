@@ -18,6 +18,7 @@ export default function Layout() {
           name="onboarding/index"
           options={{ title: "Your kind of outside" }}
         />
+        <Stack.Screen name="account/index" options={{ title: "Your account" }} />
         <Stack.Screen
           name="schedule/[weekStart]"
           options={{ title: "Your week" }}

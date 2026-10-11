@@ -29,10 +29,14 @@ it("restores development state and sessions after restart", async () => {
       userId: state.id,
       expiresAt: new Date("2030-01-01"),
     });
+    await first.createAccount({ userId: state.id, email: "person@example.com", passwordHash: "test-only-hash", createdAt: "2030-01-01T00:00:00Z" });
     const second = new FileStore(directory);
     await second.open();
     expect(await second.get(state.id)).toEqual(state);
     expect((await second.session("test-only"))?.expiresAt).toBeInstanceOf(Date);
+    expect((await second.accountByEmail("person@example.com"))?.userId).toBe(state.id);
+    await second.remove(state.id);
+    expect(await second.accountByEmail("person@example.com")).toBeUndefined();
   } finally {
     await rm(directory, { recursive: true, force: true });
   }
@@ -59,9 +63,13 @@ it.skipIf(!process.env.TEST_MONGODB_URI)(
         userId: state.id,
         expiresAt: new Date(Date.now() + 86400000),
       });
+      await store.createAccount({ userId: state.id, email: "mongo@example.com", passwordHash: "test-only-hash", createdAt: "2030-01-01T00:00:00Z" });
+      expect((await store.accountByEmail("mongo@example.com"))?.userId).toBe(state.id);
+      expect((await store.accountByUser(state.id))?.email).toBe("mongo@example.com");
       expect((await store.session("test-only"))?.userId).toBe(state.id);
       await store.remove(state.id);
       expect(await store.session("test-only")).toBeUndefined();
+      expect(await store.accountByEmail("mongo@example.com")).toBeUndefined();
     } finally {
       await store.client.db(db).dropDatabase();
       await store.close();

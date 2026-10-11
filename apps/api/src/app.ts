@@ -31,6 +31,7 @@ import { ApiError, mutate, type Store } from "./store.js";
 import { forecast, destinations } from "./providers.js";
 import { generate, type PlanningInput } from "./workflow.js";
 import { PhotoRequest, verifyPhoto } from "./photo.js";
+import { credentials, loginCredentials, passwordHash, passwordMatches } from "./auth.js";
 const hash = (token: string) =>
   createHash("sha256").update(token).digest("hex");
 const revisionBody = z.object({ revision: z.number().int().positive() });
@@ -106,13 +107,15 @@ export async function buildApp(
   const owners = new WeakMap<object, string>();
   app.addHook("onRequest", async (req, reply) => {
     reply.header("x-request-id", req.id);
-    if (req.url === "/healthz" || req.url === "/v1/sessions/guest") return;
-    const token = req.headers.authorization?.replace(/^Bearer /, "");
+    const path = req.url.split("?")[0];
+    if (["/healthz", "/v1/sessions/guest", "/v1/auth/login"].includes(path)) return;
+    const token = /^Bearer ([A-Za-z0-9_-]+)$/.exec(req.headers.authorization ?? "")?.[1];
+    if (path === "/v1/auth/register" && !req.headers.authorization) return;
     if (!token)
       throw new ApiError(
         401,
         "SESSION_REQUIRED",
-        "A guest session is required.",
+        "Sign in or start a guest session.",
       );
     const session = await store.session(hash(token));
     if (
@@ -123,7 +126,7 @@ export async function buildApp(
       throw new ApiError(
         401,
         "SESSION_EXPIRED",
-        "Your guest session expired or is unavailable. Your saved data remains on this device.",
+        "Your session expired or is unavailable. Sign in again to recover account data.",
       );
     owners.set(req, session.userId);
   });
@@ -161,14 +164,17 @@ export async function buildApp(
     new Date(
       Date.parse(now()) + Number(process.env.SESSION_TTL_DAYS || 30) * 86400000,
     );
+  const newSession = async (userId: string, email?: string) => {
+    const token = randomBytes(32).toString("base64url"), expiresAt = expiry();
+    await store.saveSession({ hash: hash(token), userId, expiresAt });
+    return { token, expiresAt: expiresAt.toISOString(), userId, ...(email ? { email } : {}) };
+  };
   app.get("/healthz", async () => ({ status: "ok" }));
   app.post(
     "/v1/sessions/guest",
     { config: { rateLimit: { max: 10, timeWindow: "1 hour" } } },
     async () => {
-      const id = randomUUID(),
-        token = randomBytes(32).toString("base64url"),
-        expiresAt = expiry();
+      const id = randomUUID();
       await store.create({
         id,
         revision: 0,
@@ -178,10 +184,54 @@ export async function buildApp(
         runs: [],
         completions: [],
       });
-      await store.saveSession({ hash: hash(token), userId: id, expiresAt });
-      return { token, expiresAt: expiresAt.toISOString() };
+      return newSession(id);
     },
   );
+  app.post(
+    "/v1/auth/register",
+    { config: { rateLimit: { max: 5, timeWindow: "1 hour" } } },
+    async (req) => {
+      const { email, password } = credentials.parse(req.body);
+      const existingOwner = owners.get(req);
+      if (existingOwner && await store.accountByUser(existingOwner))
+        throw new ApiError(409, "ACCOUNT_EXISTS", "This profile already has an account.");
+      if (await store.accountByEmail(email))
+        throw new ApiError(409, "ACCOUNT_EXISTS", "An account already exists for this email.");
+      const id = existingOwner ?? randomUUID();
+      const account = { userId: id, email, passwordHash: await passwordHash(password), createdAt: now() };
+      if (!existingOwner) await store.create({
+        id, revision: 0, preferences: defaultPreferences(), schedules: {}, plans: {}, runs: [], completions: [],
+      });
+      try {
+        await store.createAccount(account);
+      } catch (error) {
+        if (!existingOwner) await store.remove(id);
+        throw error;
+      }
+      const result = await newSession(id, email);
+      if (existingOwner) {
+        const oldToken = /^Bearer ([A-Za-z0-9_-]+)$/.exec(req.headers.authorization ?? "")?.[1];
+        if (oldToken) await store.removeSession(hash(oldToken));
+      }
+      return result;
+    },
+  );
+  app.post(
+    "/v1/auth/login",
+    { config: { rateLimit: { max: 10, timeWindow: "1 hour" } } },
+    async (req) => {
+      const { email, password } = loginCredentials.parse(req.body);
+      const account = await store.accountByEmail(email);
+      if (!account || !(await passwordMatches(password, account.passwordHash)) || !(await store.get(account.userId)))
+        throw new ApiError(401, "INVALID_CREDENTIALS", "Email or password is incorrect.");
+      return newSession(account.userId, account.email);
+    },
+  );
+  app.post("/v1/auth/logout", async (req) => {
+    const token = /^Bearer ([A-Za-z0-9_-]+)$/.exec(req.headers.authorization ?? "")![1];
+    await store.removeSession(hash(token));
+    return { signedOut: true };
+  });
   app.post("/v1/sessions/renew", async (req) => {
     const expiresAt = expiry();
     await store.saveSession({
@@ -193,11 +243,13 @@ export async function buildApp(
   });
   app.get("/v1/me", async (req) => {
     const s = await state(req);
+    const account = await store.accountByUser(s.id);
     const weekStart = weekKey(now(), s.preferences);
     return {
       preferences: s.preferences,
       weekStart,
       confirmed: !!s.schedules[weekStart]?.confirmedAt,
+      account: account ? { email: account.email } : null,
     };
   });
   app.patch("/v1/me/preferences", async (req) => {
